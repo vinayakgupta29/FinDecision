@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.cache/
+.tmp/
+models/
+reports/benchmark.json
+reports/evaluation.json
