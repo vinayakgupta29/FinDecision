@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111318">
+    <title>FinDecision — Financial Sentiment</title>
+    <link rel="stylesheet" href="/static/app.css">
+    <script src="/static/app.js" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="/">
+            <span class="brand-mark">F</span>
+            <span>FinDecision</span>
+        </a>
+        <div class="header-right">
+            <span class="local-indicator">
+                <span class="dot"></span> Local inference
+            </span>
+            <a href="/docs" target="_blank" rel="noreferrer">API docs ↗</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="eyebrow">FINANCIAL NLP · TEXT CLASSIFICATION</div>
+            <h1>Read the sentiment.<br><span>Not the stock price.</span></h1>
+            <p>
+                Analyze financial news, earnings reports, and company
+                announcements using a pretrained language model.
+            </p>
+        </section>
+
+        <section class="workspace">
+            <div class="panel input-panel">
+                <div class="section-heading">
+                    <div>
+                        <div class="eyebrow">INPUT</div>
+                        <h2>Analyze financial text</h2>
+                    </div>
+                </div>
+
+                <div class="tabs" role="tablist" aria-label="Input type">
+                    <button class="tab active" data-mode="text"
+                            role="tab" aria-selected="true">
+                        Paste text
+                    </button>
+                    <button class="tab" data-mode="url"
+                            role="tab" aria-selected="false">
+                        Article URL
+                    </button>
+                </div>
+
+                <form id="analysis-form">
+                    <div id="text-input-group">
+                        <label for="financial-text">Financial text</label>
+                        <textarea
+                            id="financial-text"
+                            maxlength="50000"
+                            placeholder="Paste an earnings announcement, financial headline, or report excerpt..."
+                            rows="10"
+                        ></textarea>
+                        <div class="field-footer">
+                            <span>English text works best</span>
+                            <span id="char-count">0 / 50,000</span>
+                        </div>
+                    </div>
+
+                    <div id="url-input-group" hidden>
+                        <label for="article-url">Article URL</label>
+                        <input
+                            id="article-url"
+                            type="url"
+                            placeholder="https://example.com/financial-news"
+                            autocomplete="url"
+                        >
+                        <p class="field-hint">
+                            Public HTTP(S) article pages only. Paywalled
+                            or JavaScript-rendered pages may not work.
+                        </p>
+                    </div>
+
+                    <button class="primary-button" id="analyze-button"
+                            type="submit">
+                        <span id="button-label">Analyze sentiment</span>
+                        <span aria-hidden="true"> →</span>
+                    </button>
+                </form>
+
+                <p class="privacy-note">
+                    <span aria-hidden="true">◈</span>
+                    Inference runs locally. Article URLs require a server-side
+                    fetch to retrieve the page.
+                </p>
+            </div>
+
+            <div class="panel result-panel" aria-live="polite">
+                <div class="section-heading">
+                    <div>
+                        <div class="eyebrow">RESULT</div>
+                        <h2>Sentiment analysis</h2>
+                    </div>
+                    <span class="result-status" id="result-status">
+                        Waiting for input
+                    </span>
+                </div>
+
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-icon">⌁</div>
+                    <h3>Your results appear here</h3>
+                    <p>
+                        Submit financial text or an article URL to see
+                        the predicted sentiment and class scores.
+                    </p>
+                    <div class="class-preview">
+                        <span class="neutral-chip">Positive</span>
+                        <span class="neutral-chip">Neutral</span>
+                        <span class="neutral-chip">Negative</span>
+                    </div>
+                </div>
+
+                <div id="loading-state" class="loading-state" hidden>
+                    <div class="spinner"></div>
+                    <p id="loading-message">Running model inference…</p>
+                    <span>First requests may take longer if the model
+                        is still loading.</span>
+                </div>
+
+                <div id="error-state" class="error-state" hidden>
+                    <h3>Analysis failed</h3>
+                    <p id="error-message"></p>
+                </div>
+
+                <div id="result-content" hidden>
+                    <div class="prediction-block">
+                        <span class="muted-label">PREDICTED CLASS</span>
+                        <h3 id="predicted-class">Neutral</h3>
+                        <p id="prediction-description"></p>
+                    </div>
+
+                    <div class="probability-section">
+                        <div class="probability-heading">
+                            <h3>Class distribution</h3>
+                            <span>Model scores</span>
+                        </div>
+                        <div id="probability-list"></div>
+                    </div>
+
+                    <div id="article-metadata" class="article-metadata"
+                         hidden>
+                        <span class="muted-label">SOURCE ARTICLE</span>
+                        <p id="article-title"></p>
+                        <a id="article-link" href="#" target="_blank"
+                           rel="noopener noreferrer"></a>
+                    </div>
+
+                    <div id="warnings-container" class="warnings"
+                         hidden>
+                        <h3>Warnings</h3>
+                        <ul id="warnings-list"></ul>
+                    </div>
+
+                    <div class="model-footer">
+                        <span>MODEL</span>
+                        <code id="model-name"></code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="disclaimer">
+            <strong>Interpretation matters.</strong>
+            <p>
+                These scores represent model estimates of sentiment expressed
+                in the supplied text. Softmax scores are not necessarily
+                calibrated probabilities and do not establish future stock
+                returns or constitute investment advice.
+            </p>
+        </section>
+
+        <footer>
+            <span>FinDecision · Local financial NLP</span>
+            <span><a href="/health">Health</a> · <a href="/model-info">Model info</a></span>
+        </footer>
+    </main>
+</body>
+</html>
