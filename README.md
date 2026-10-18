@@ -128,7 +128,11 @@ When an article or financial statement exceeds the transformer's token context w
 3. Each chunk is scored individually by the model.
 4. Chunk probabilities are combined using a character-length weighting heuristic:
 
-$$\bar{P}(\text{label}) = \frac{\sum_{i=1}^{N} P_i(\text{label}) \cdot \operatorname{len}(\text{chunk}_i)}{\sum_{i=1}^{N} \operatorname{len}(\text{chunk}_i)}$$
+$$
+\bar{P}(\text{label}) =
+\frac{\sum_{i=1}^{N} P_i(\text{label}) \cdot |\text{chunk}_i|}
+{\sum_{i=1}^{N} |\text{chunk}_i|}
+$$
 
 5. An advisory warning is returned in the API payload informing callers that chunk-averaged scores represent an aggregation heuristic rather than a joint article-level probability.
 
